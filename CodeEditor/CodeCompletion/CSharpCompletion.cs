@@ -229,9 +229,7 @@ namespace CodeCompletion
         private void GetReferenceByFiles()
         {
             var referenceFolderPath = "C:\\Users\\earlsan.villegas\\Documents\\PWS";
-
             AddReferences(Directory.GetFiles(referenceFolderPath).ToArray());
-
 
         }
 
@@ -318,24 +316,6 @@ namespace CodeCompletion
             throw new FileNotFoundException("Reference could not be found: " + reference);
         }
 
-        //private static XmlDocumentationProvider GetXmlDocumentation(string dllPath)
-        //{
-        //    if (string.IsNullOrEmpty(dllPath))
-        //        return null;
-
-        //    var xmlFileName = Path.GetFileNameWithoutExtension(dllPath) + ".xml";
-        //    var localPath = Path.Combine(Path.GetDirectoryName(dllPath), xmlFileName);
-        //    if (File.Exists(localPath))
-        //        return new XmlDocumentationProvider(localPath);
-
-        //    //if it's a .NET framework assembly it's in one of following folders
-        //    //TODO: this path reference seems brittle
-        //    var netPath = Path.Combine(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0", xmlFileName);
-        //    if (File.Exists(netPath))
-        //        return new XmlDocumentationProvider(netPath);
-
-        //    return null;
-        //}
 
         #endregion
 

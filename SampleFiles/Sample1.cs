@@ -1,30 +1,14 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+// {Input library declarations here}
 
-public class Sample1
+namespace test3
 {
-	public event EventHandler<EventArgs> MyEvent;
-	
-    public Sample1()
-	{
-		var a = "Hello";
-	}
-
-	///<summary>
-	/// This adds two nubers together.
-	///</summary>
-    public virtual int Add(int number1, int number2)
+    public class Rule
     {
-        number1 + number2;
-    }
-}
-
-public class OtherClass
-{
-    public void GetSample1()
-    {
-        var sample = new Sample1();
-        sample.Add(10,100);
+        public static bool Execute()
+        {
+            // {Input rule code here}
+        }
     }
 }
