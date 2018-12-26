@@ -46,7 +46,8 @@ namespace CodeEditor
             ////tabItem.Header = System.IO.Path.GetFileName(fileName);
             //tabControl.Items.Add(tabItem);
             var path = Environment.CurrentDirectory;
-            OpenFile(@"..\..\SampleFiles\Sample1.cs");
+            //OpenFile(@"..\..\..\SampleFiles\Sample1.cs");
+            OpenFile(@"C:\Users\earlsan.villegas\Documents\Github\CodeEditor\SampleFiles\Sample1.cs");
         }
 
         private void OpenFile(string fileName)

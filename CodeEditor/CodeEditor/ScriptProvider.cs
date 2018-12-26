@@ -14,14 +14,16 @@ namespace CodeEditor
     {
         public string GetNamespace() => null;
 
-        public string GetUsing()
-        {
-            return "" +
-                   "using System; " +
-                   "using System.Collections.Generic; " +
-                   "using System.Linq; " +
-                   "using System.Text; ";
-        }
+        //public string GetUsing()
+        //{
+        //    return "" +
+        //           "using System; " +
+        //           "using System.Collections.Generic; " +
+        //           "using System.Linq; " +
+        //           "using System.Text; ";
+        //}
+
+        public string GetUsing() => null;
 
         public string GetVars() => null;
     }

@@ -1,4 +1,5 @@
 ﻿using CodeCompletion.DataItems;
+using CodeCompletion.Util;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.NRefactory.CSharp;
 using ICSharpCode.NRefactory.CSharp.Completion;
@@ -51,7 +52,12 @@ namespace CodeCompletion
                 });
             Debug.WriteLine("Init project content, loading base assemblies: " + total.Elapsed);
             projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
+
+            //Earl Testing
+            GetReferenceByFiles();
         }
+
+        
 
         public CSharpCompletion(ICSharpScriptProvider scriptProvider, IReadOnlyList<Assembly> assemblies = null)
             : this(assemblies)
@@ -217,5 +223,121 @@ namespace CodeCompletion
 
             return result;
         }
+
+        //Testing
+        #region Testing
+        private void GetReferenceByFiles()
+        {
+            var referenceFolderPath = "C:\\Users\\earlsan.villegas\\Documents\\PWS";
+
+            AddReferences(Directory.GetFiles(referenceFolderPath).ToArray());
+
+
+        }
+
+        public void AddReferences(params string[] references)
+        {
+            if (references == null || references.Length == 0)
+                return;
+
+            var unresolvedAssemblies = GetUnresolvedAssemblies(references);
+            projectContent = projectContent.AddAssemblyReferences((IEnumerable<IUnresolvedAssembly>)unresolvedAssemblies);
+        }
+
+
+        private  IUnresolvedAssembly[] GetUnresolvedAssemblies(string[] references)
+        {
+            IUnresolvedAssembly[] unresolvedAssemblies = null;
+            if (references.Length == 1)
+            {
+                unresolvedAssemblies = new[] { GetUnresolvedAssembly(references[0]) };
+            }
+            else
+            {
+                unresolvedAssemblies = references
+                    .AsParallel()
+                    .AsOrdered()
+                    .Select(GetUnresolvedAssembly)
+                    .ToArray();
+            }
+            return unresolvedAssemblies;
+        }
+        private IUnresolvedAssembly GetUnresolvedAssembly(string reference)
+        {
+            var fullPath = reference;
+
+            var pathBin = "bin"; //This should be contstant; Contants.BinFolder;
+            //look in the bin folder
+            if (!File.Exists(fullPath))
+                fullPath = Path.Combine(Environment.CurrentDirectory, pathBin, reference);
+            if (!File.Exists(fullPath))
+                fullPath = Path.Combine(Environment.CurrentDirectory, pathBin, reference + ".dll");
+            if (!File.Exists(fullPath))
+                fullPath = Path.Combine(Environment.CurrentDirectory, pathBin, reference + ".exe");
+            //try to resolve as relaive path
+            if (!File.Exists(fullPath))
+                fullPath = PathHelper.ToAbsolutePath(Environment.CurrentDirectory, reference);
+            //exe path
+            if (!File.Exists(fullPath))
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                var exePath = Path.GetDirectoryName(path);
+                if (exePath != null)
+                {
+                    fullPath = Path.Combine(exePath, reference + ".dll");
+                    if (!File.Exists(fullPath))
+                        fullPath = Path.Combine(exePath, reference + ".exe");
+                }
+            }
+            //try to find in GAC
+            if (!File.Exists(fullPath))
+            {
+                try
+                {
+                    var assemblyName = new AssemblyName(reference);
+                    fullPath = GlobalAssemblyCache.FindAssemblyInNetGac(assemblyName);
+                }
+                catch { }
+            }
+            if (!File.Exists(fullPath))
+            {
+                var assemblyName = GlobalAssemblyCache.FindBestMatchingAssemblyName(reference);
+                if (assemblyName != null)
+                    fullPath = GlobalAssemblyCache.FindAssemblyInNetGac(assemblyName);
+            }
+
+            if (File.Exists(fullPath))
+            {
+                var loader = new CecilLoader();
+                loader.DocumentationProvider = GetXmlDocumentation(fullPath);
+                var unresolvedAssembly = loader.LoadAssemblyFile(fullPath);
+                return unresolvedAssembly;
+            }
+            throw new FileNotFoundException("Reference could not be found: " + reference);
+        }
+
+        //private static XmlDocumentationProvider GetXmlDocumentation(string dllPath)
+        //{
+        //    if (string.IsNullOrEmpty(dllPath))
+        //        return null;
+
+        //    var xmlFileName = Path.GetFileNameWithoutExtension(dllPath) + ".xml";
+        //    var localPath = Path.Combine(Path.GetDirectoryName(dllPath), xmlFileName);
+        //    if (File.Exists(localPath))
+        //        return new XmlDocumentationProvider(localPath);
+
+        //    //if it's a .NET framework assembly it's in one of following folders
+        //    //TODO: this path reference seems brittle
+        //    var netPath = Path.Combine(@"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0", xmlFileName);
+        //    if (File.Exists(netPath))
+        //        return new XmlDocumentationProvider(netPath);
+
+        //    return null;
+        //}
+
+        #endregion
+
     }
 }
