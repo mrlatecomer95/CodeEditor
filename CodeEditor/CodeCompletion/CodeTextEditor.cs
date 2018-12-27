@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Input;
 
-namespace CodeCompletion
+namespace AvalonEdit.AddIn
 {
     public class CodeTextEditor : TextEditor
     {
@@ -18,11 +18,20 @@ namespace CodeCompletion
         protected OverloadInsightWindow insightWindow;
 
         public CSharpCompletion Completion { get; set; }
+        BracketHighlightRenderer bracketRenderer;
+
         public CodeTextEditor()
         {
+
+            bracketRenderer = new BracketHighlightRenderer(this.TextArea.TextView);
             TextArea.TextEntering += OnTextEntering;
             TextArea.TextEntered += OnTextEntered;
+            TextArea.Caret.PositionChanged += HighlightBrackets;
             ShowLineNumbers = true;
+
+
+            //Bracket Matchint Higlighting
+            UpdateBracketHighlighting();
 
             var ctrlSpace = new RoutedCommand();
             ctrlSpace.InputGestures.Add(new KeyGesture(Key.Space, ModifierKeys.Control));
@@ -31,6 +40,65 @@ namespace CodeCompletion
             this.CommandBindings.Add(cb);
 
         }
+
+        #region CaretPositionChanged - Bracket Highlighting
+        /// <summary>
+        /// Highlights matching brackets.
+        /// </summary>
+        void HighlightBrackets(object sender, EventArgs e)
+        {
+            //        /*
+            //* Special case: ITextEditor.Language guarantees that it never returns null.
+            //* In this case however it can be null, since this code may be called while the document is loaded.
+            //* ITextEditor.Language gets set in CodeEditorAdapter.FileNameChanged, which is called after
+            //* loading of the document has finished.
+            //* */
+            //        if (this.Adapter.Language != null)
+            //        {
+            //            if (CodeEditorOptions.Instance.HighlightBrackets || CodeEditorOptions.Instance.ShowHiddenDefinitions)
+            //            {
+            //                var bracketSearchResult = this.Adapter.Language.BracketSearcher.SearchBracket(this.Adapter.Document, this.TextArea.Caret.Offset);
+            //                if (CodeEditorOptions.Instance.HighlightBrackets)
+            //                {
+            //                    this.bracketRenderer.SetHighlight(bracketSearchResult);
+            //                }
+            //                else
+            //                {
+            //                    this.bracketRenderer.SetHighlight(null);
+            //                }
+            //                if (CodeEditorOptions.Instance.ShowHiddenDefinitions)
+            //                {
+            //                    this.hiddenDefinitionRenderer.BracketSearchResult = bracketSearchResult;
+            //                    this.hiddenDefinitionRenderer.Show();
+            //                }
+            //                else
+            //                {
+            //                    this.hiddenDefinitionRenderer.ClosePopup();
+            //                }
+            //            }
+            //            else
+            //            {
+            //                this.bracketRenderer.SetHighlight(null);
+            //                this.hiddenDefinitionRenderer.ClosePopup();
+            //            }
+            //        }
+
+
+
+            try
+            {
+                var doc = new ReadOnlyDocument(new StringTextSource(Text), FileName);
+                var bracketSearchResult = new CSharpBracketSearcher().SearchBracket(doc, TextArea.Caret.Offset);
+                bracketRenderer.SetHighlight(bracketSearchResult);
+            }
+            catch (Exception exception)
+            {
+
+                Debug.WriteLine("Error in getting the BracketSearcher: " + exception);
+            }
+
+        }
+        #endregion
 
         #region CodeCompletion
         private void OnTextEntering(object sender, TextCompositionEventArgs textCompositionEventArgs)
@@ -214,6 +282,11 @@ namespace CodeCompletion
         }
 
 
+        private void UpdateBracketHighlighting()
+        {
+            BracketHighlightRenderer.ApplyCustomizationsToRendering(this.bracketRenderer);
+            TextArea.TextView.Redraw();
+        }
 
     }
 }

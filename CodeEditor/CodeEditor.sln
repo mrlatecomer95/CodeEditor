@@ -5,12 +5,16 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeEditor", "CodeEditor\CodeEditor.csproj", "{9B7EEA19-E3F3-4CB0-813F-449CB0B49E7D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeCompletion", "CodeCompletion\CodeCompletion.csproj", "{9AA999A9-E9DA-4918-8663-D366B649ABD4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SampleFiles", "SampleFiles", "{B5920A7F-EA26-4A8D-8A4A-0AC210FD8C40}"
 	ProjectSection(SolutionItems) = preProject
 		..\SampleFiles\Sample1.cs = ..\SampleFiles\Sample1.cs
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AddIns", "AddIns", "{C95669F6-B71B-4DC4-82AB-2085CCA243C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonEdit.AddIn", "AvalonEdit.AddIn\AvalonEdit.AddIn.csproj", "{ADA514A0-4C4B-4854-A1D3-E402A3F57018}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageBindings", "LanguageBindings", "{E63A1DD6-A06F-4A32-B33E-08818F778FE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,12 +26,16 @@ Global
 		{9B7EEA19-E3F3-4CB0-813F-449CB0B49E7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B7EEA19-E3F3-4CB0-813F-449CB0B49E7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B7EEA19-E3F3-4CB0-813F-449CB0B49E7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9AA999A9-E9DA-4918-8663-D366B649ABD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9AA999A9-E9DA-4918-8663-D366B649ABD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9AA999A9-E9DA-4918-8663-D366B649ABD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9AA999A9-E9DA-4918-8663-D366B649ABD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADA514A0-4C4B-4854-A1D3-E402A3F57018}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADA514A0-4C4B-4854-A1D3-E402A3F57018}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADA514A0-4C4B-4854-A1D3-E402A3F57018}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADA514A0-4C4B-4854-A1D3-E402A3F57018}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ADA514A0-4C4B-4854-A1D3-E402A3F57018} = {C95669F6-B71B-4DC4-82AB-2085CCA243C9}
+		{E63A1DD6-A06F-4A32-B33E-08818F778FE9} = {C95669F6-B71B-4DC4-82AB-2085CCA243C9}
 	EndGlobalSection
 EndGlobal
