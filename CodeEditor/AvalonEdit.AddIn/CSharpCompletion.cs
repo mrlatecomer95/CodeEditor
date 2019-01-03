@@ -57,7 +57,7 @@ namespace AvalonEdit.AddIn
             GetReferenceByFiles();
         }
 
-        
+
 
         public CSharpCompletion(ICSharpScriptProvider scriptProvider, IReadOnlyList<Assembly> assemblies = null)
             : this(assemblies)
@@ -228,9 +228,17 @@ namespace AvalonEdit.AddIn
         #region Testing
         private void GetReferenceByFiles()
         {
-            var referenceFolderPath = "C:\\Users\\earlsan.villegas\\Documents\\PWS";
-            AddReferences(Directory.GetFiles(referenceFolderPath).ToArray());
+            var referenceFolderPath = new string[] {
+                    "C:\\Users\\earlsan.villegas\\Documents\\PWS",
+            };
+            //AddReferences(Directory.GetFiles(referenceFolderPath).ToArray());
 
+
+            foreach (string item in referenceFolderPath)
+            {
+                AddReferences(Directory.GetFiles(item).ToArray());
+            }
+            AddAssembly("C:\\Users\\earlsan.villegas\\Documents\\Github\\CodeEditor\\CodeEditor\\CodeEditor\\bin\\Debug\\Dynamic.Points.dll");
         }
 
         public void AddReferences(params string[] references)
@@ -243,7 +251,7 @@ namespace AvalonEdit.AddIn
         }
 
 
-        private  IUnresolvedAssembly[] GetUnresolvedAssemblies(string[] references)
+        private IUnresolvedAssembly[] GetUnresolvedAssemblies(string[] references)
         {
             IUnresolvedAssembly[] unresolvedAssemblies = null;
             if (references.Length == 1)
@@ -263,9 +271,11 @@ namespace AvalonEdit.AddIn
         private IUnresolvedAssembly GetUnresolvedAssembly(string reference)
         {
             var fullPath = reference;
+            var fileEx = new FileInfo(reference);
+
 
             var pathBin = "bin"; //This should be contstant; Contants.BinFolder;
-            //look in the bin folder
+                                 //look in the bin folder
             if (!File.Exists(fullPath))
                 fullPath = Path.Combine(Environment.CurrentDirectory, pathBin, reference);
             if (!File.Exists(fullPath))
@@ -314,6 +324,7 @@ namespace AvalonEdit.AddIn
                 return unresolvedAssembly;
             }
             throw new FileNotFoundException("Reference could not be found: " + reference);
+
         }
 
 

@@ -20,7 +20,7 @@ namespace AvalonEdit.AddIn
         public CSharpCompletion Completion { get; set; }
         BracketHighlightRenderer bracketRenderer;
 
-        public CodeTextEditor()
+        public CodeTextEditor() 
         {
 
             bracketRenderer = new BracketHighlightRenderer(this.TextArea.TextView);
