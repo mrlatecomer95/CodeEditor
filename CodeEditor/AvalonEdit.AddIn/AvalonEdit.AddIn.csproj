@@ -99,8 +99,11 @@
     <Compile Include="IBracketSearcher.cs" />
     <Compile Include="ICSharpScriptProvider.cs" />
     <Compile Include="Images\CompletionImage.cs" />
+    <Compile Include="DataItems\MyCompletionData.cs" />
+    <Compile Include="ClassList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SegmentTrackingOutputFormatter.cs" />
+    <Compile Include="Util\Constants.cs" />
     <Compile Include="Util\FusionNative.cs" />
     <Compile Include="Util\GlobalAssemblyCache.cs" />
     <Compile Include="Util\PathHelper.cs" />

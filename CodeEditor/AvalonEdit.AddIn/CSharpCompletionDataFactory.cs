@@ -138,6 +138,7 @@ namespace AvalonEdit.AddIn
         #endregion
 
         #region IParameterCompletionDataFactory implementation
+
         IParameterDataProvider CreateMethodDataProvider(int startOffset, IEnumerable<IParameterizedMember> methods)
         {
             return new CSharpOverloadProvider(context, startOffset, from m in methods where m != null select new CSharpInsightItem(m));

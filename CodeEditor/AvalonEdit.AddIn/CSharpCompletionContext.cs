@@ -66,41 +66,44 @@ namespace AvalonEdit.AddIn
             if (String.IsNullOrEmpty(document.FileName))
                 return document;
 
-            //if the code is just a script it it will contain no namestpace, class and method structure and so the code completion will not work properly
-            // for it to work we have to suround the code with the appropriate code structure
-            //we only process the file if its a .csx file
-            var fileExtension = Path.GetExtension(document.FileName);
-            var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(document.FileName);
-            if (String.IsNullOrEmpty(fileExtension) || String.IsNullOrEmpty(fileNameWithoutExtension))
-                return document;
+            /*
+            - if the code is just a script it it will contain no namespace, class and method structure and so the code completion will not work properly
+            - for it to work we have to suround the code with the appropriate code structure
+            - we only process the file if its a .csx file
+            */
+            
+            //var fileExtension = Path.GetExtension(document.FileName);
+            //var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(document.FileName);
+            //if (String.IsNullOrEmpty(fileExtension) || String.IsNullOrEmpty(fileNameWithoutExtension))
+            //    return document;
 
-            if (fileExtension.ToLower() == ".csx")
-            {
-                string classname = replaceRegex.Replace(fileNameWithoutExtension, "");
-                classname = classname.TrimStart('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+            //if (fileExtension.ToLower() == ".csx")
+            //{
+            //    string classname = replaceRegex.Replace(fileNameWithoutExtension, "");
+            //    classname = classname.TrimStart('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
-                string header = String.Empty;
-                header += (usings ?? "") + Environment.NewLine;
-                if (@namespace != null)
-                {
-                    header += "namespace " + @namespace + " {" + Environment.NewLine;
-                }
-                header += "public static class " + classname + " {" + Environment.NewLine;
-                header += "public static void Main() {" + Environment.NewLine;
-                header += (variables ?? "") + Environment.NewLine;
+            //    string header = String.Empty;
+            //    header += (usings ?? "") + Environment.NewLine;
+            //    if (@namespace != null)
+            //    {
+            //        header += "namespace " + @namespace + " {" + Environment.NewLine;
+            //    }
+            //    header += "public static class " + classname + " {" + Environment.NewLine;
+            //    header += "public static void Main() {" + Environment.NewLine;
+            //    header += (variables ?? "") + Environment.NewLine;
 
-                string footer = "}" + Environment.NewLine + "}" + Environment.NewLine;
-                if (@namespace != null)
-                {
-                    footer += "}" + Environment.NewLine;
-                }
+            //    string footer = "}" + Environment.NewLine + "}" + Environment.NewLine;
+            //    if (@namespace != null)
+            //    {
+            //        footer += "}" + Environment.NewLine;
+            //    }
 
-                string code = header + document.Text + Environment.NewLine + footer;
+            //    string code = header + document.Text + Environment.NewLine + footer;
 
-                offset += header.Length;
+            //    offset += header.Length;
 
-                return new ReadOnlyDocument(new StringTextSource(code), document.FileName);
-            }
+            //    return new ReadOnlyDocument(new StringTextSource(code), document.FileName);
+            //}
             return document;
         }
     }

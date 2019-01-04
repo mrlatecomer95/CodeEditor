@@ -1,4 +1,5 @@
 ﻿
+using AvalonEdit.AddIn.Util;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -16,6 +17,7 @@ namespace AvalonEdit.AddIn
     {
         protected CompletionWindow completionWindow;
         protected OverloadInsightWindow insightWindow;
+
 
         public CSharpCompletion Completion { get; set; }
         BracketHighlightRenderer bracketRenderer;
@@ -36,8 +38,30 @@ namespace AvalonEdit.AddIn
             var ctrlSpace = new RoutedCommand();
             ctrlSpace.InputGestures.Add(new KeyGesture(Key.Space, ModifierKeys.Control));
 
+            var pressCtrlF1 = new RoutedCommand();
+            pressCtrlF1.InputGestures.Add(new KeyGesture(Key.F1, ModifierKeys.Control, "Testing"));
+
+
             var cb = new CommandBinding(ctrlSpace, OnCtrlSpaceCommand);
+
             this.CommandBindings.Add(cb);
+            this.CommandBindings.Add(new CommandBinding(pressCtrlF1, OnCtrlF1));
+
+        }
+
+        private void OnCtrlF1(object sender, ExecutedRoutedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            //CompletionWindow win = new CompletionWindow(TextArea);
+            //IList<ICompletionData> complist = win.CompletionList.CompletionData;
+            //complist.Add(new MyCompletionData("Point1"));
+            //complist.Add(new MyCompletionData("Point2"));
+            //complist.Add(new MyCompletionData("Point3"));
+            //complist.Add(new MyCompletionData("Point4"));
+            //complist.Add(new MyCompletionData("Point5"));
+            //complist.Add(new MyCompletionData("Point6"));
+            //complist.Add(new MyCompletionData("Point7"));
+            //win.Show();
 
         }
 
@@ -47,44 +71,6 @@ namespace AvalonEdit.AddIn
         /// </summary>
         void HighlightBrackets(object sender, EventArgs e)
         {
-            //        /*
-            //* Special case: ITextEditor.Language guarantees that it never returns null.
-            //* In this case however it can be null, since this code may be called while the document is loaded.
-            //* ITextEditor.Language gets set in CodeEditorAdapter.FileNameChanged, which is called after
-            //* loading of the document has finished.
-            //* */
-            //        if (this.Adapter.Language != null)
-            //        {
-            //            if (CodeEditorOptions.Instance.HighlightBrackets || CodeEditorOptions.Instance.ShowHiddenDefinitions)
-            //            {
-            //                var bracketSearchResult = this.Adapter.Language.BracketSearcher.SearchBracket(this.Adapter.Document, this.TextArea.Caret.Offset);
-            //                if (CodeEditorOptions.Instance.HighlightBrackets)
-            //                {
-            //                    this.bracketRenderer.SetHighlight(bracketSearchResult);
-            //                }
-            //                else
-            //                {
-            //                    this.bracketRenderer.SetHighlight(null);
-            //                }
-            //                if (CodeEditorOptions.Instance.ShowHiddenDefinitions)
-            //                {
-            //                    this.hiddenDefinitionRenderer.BracketSearchResult = bracketSearchResult;
-            //                    this.hiddenDefinitionRenderer.Show();
-            //                }
-            //                else
-            //                {
-            //                    this.hiddenDefinitionRenderer.ClosePopup();
-            //                }
-            //            }
-            //            else
-            //            {
-            //                this.bracketRenderer.SetHighlight(null);
-            //                this.hiddenDefinitionRenderer.ClosePopup();
-            //            }
-            //        }
-
-
-
             try
             {
                 var doc = new ReadOnlyDocument(new StringTextSource(Text), FileName);
@@ -196,7 +182,11 @@ namespace AvalonEdit.AddIn
                     if (results.TriggerWordLength > 0)
                     {
                         //completionWindow.CompletionList.IsFiltering = false;
-                        completionWindow.CompletionList.SelectItem(results.TriggerWord);
+                        if (results.TriggerWord != string.Concat(Constants.PointCaller, "@") && results.TriggerWord != string.Concat(Constants.ModelCaller, "@"))
+                        {
+                            completionWindow.CompletionList.SelectItem(results.TriggerWord);
+                        }
+                        
                     }
                     completionWindow.Show();
                     completionWindow.Closed += (o, args) => completionWindow = null;

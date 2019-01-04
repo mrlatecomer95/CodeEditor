@@ -105,10 +105,6 @@
       <Project>{ada514a0-4c4b-4854-a1d3-e402a3f57018}</Project>
       <Name>AvalonEdit.AddIn</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UtilityPointClass\UtilityPointClass.csproj">
-      <Project>{070933dd-2923-43ae-b4f3-52c45bee3344}</Project>
-      <Name>UtilityPointClass</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

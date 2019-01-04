@@ -136,12 +136,10 @@ namespace AvalonEdit.AddIn
         public CodeCompletionResult GetCompletions(IDocument document, int offset, bool controlSpace, string usings, string variables, string @namespace)
         {
             var result = new CodeCompletionResult();
-
             if (String.IsNullOrEmpty(document.FileName))
                 return result;
 
             var completionContext = new CSharpCompletionContext(document, offset, projectContent, usings, variables, @namespace);
-
             var completionFactory = new CSharpCompletionDataFactory(completionContext.TypeResolveContextAtCaret, completionContext);
             var cce = new CSharpCompletionEngine(
                 completionContext.Document,
@@ -181,6 +179,23 @@ namespace AvalonEdit.AddIn
                     completionData = cce.GetCompletionData(startPos, false);
                     startPos--;
                     triggerWordLength = 1;
+
+                }
+                else if ((!char.IsLetterOrDigit(completionChar)) || completionChar == '@')
+                {
+
+                    var strPrefix = completionContext.Document.GetText(startPos - 5, 4); //Get the Text; FIFO
+
+                    if (strPrefix.Trim().Length > 0 && (strPrefix == Constants.PointCaller || strPrefix == Constants.ModelCaller))
+                    {
+
+                        GetPointModuleCompletion(strPrefix, controlSpace, ref result);
+                        result.TriggerWord = strPrefix + "@";
+                        result.TriggerWordLength = strPrefix.Length + 1;
+                        return result;
+                    }
+                    completionData = cce.GetCompletionData(startPos, false);
+                    triggerWordLength = 0;
                 }
                 else
                 {
@@ -222,7 +237,65 @@ namespace AvalonEdit.AddIn
             }
 
             return result;
+
         }
+
+
+        private void GetPointModuleCompletion(string prefix, bool controlSpace, ref CodeCompletionResult result)
+        {
+            var compData = new List<MyCompletionData>();
+
+
+            if (prefix != null)
+            {
+                if (prefix == Constants.PointCaller)
+                {
+                    compData = ClassList.GetPointCompletion() as List<MyCompletionData>;
+
+
+                }
+                else if (prefix == Constants.ModelCaller)
+                {
+                    compData = ClassList.GetModelCompletion() as List<MyCompletionData>;
+                }
+
+
+                if (controlSpace)
+                {
+                    foreach (var completion in compData)
+                    {
+                        var cshellCompletionData = completion as MyCompletionData;
+                        cshellCompletionData.PreFix = prefix;
+                        if (cshellCompletionData != null)
+                        {
+                            cshellCompletionData.TriggerWord = result.TriggerWord;
+                            cshellCompletionData.TriggerWordLength = result.TriggerWordLength;
+                            result.CompletionData.Add(cshellCompletionData);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var completion in compData)
+                    {
+                        var cshellCompletionData = completion as MyCompletionData;
+                        cshellCompletionData.PreFix = prefix;
+                        if (cshellCompletionData != null)
+                        {
+                            cshellCompletionData.TriggerWord = prefix + "@";
+                            cshellCompletionData.TriggerWordLength = prefix.Length + 1;
+                            result.CompletionData.Add(cshellCompletionData);
+                        }
+                    }
+
+
+                }
+
+
+            }
+        }
+
+
 
         //Testing
         #region Testing
