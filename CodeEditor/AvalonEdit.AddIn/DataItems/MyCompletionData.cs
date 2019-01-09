@@ -8,13 +8,13 @@ using AvalonEdit.AddIn.Util;
 
 namespace AvalonEdit.AddIn.DataItems
 {
-    class MyCompletionData : CompletionData
+    class PointModelCompletionData : CompletionData
     {
-        public MyCompletionData()
+        public PointModelCompletionData()
         {
 
         }
-        public MyCompletionData(string text)
+        public PointModelCompletionData(string text)
         {
             DisplayText = CompletionText = Description = text;
         }
@@ -34,7 +34,14 @@ namespace AvalonEdit.AddIn.DataItems
                 default:
                     break;
             }
-            textArea.Document.Replace(completionSegment, "\"" + _list.FirstOrDefault(w => w.Key == this.CompletionText).Value + "\"");
+
+            var outstr = "\"" + _list.FirstOrDefault(w => w.Key == this.CompletionText).Value + "\"" ;
+
+            var offset = completionSegment.Offset  - PreFix.Length - 1;
+            var length = completionSegment.Length + PreFix.Length + 1;
+            textArea.Document.Replace(offset, length, outstr );
+
+            //textArea.Document.Replace(completionSegment, "\"" + outstr + "\"");
         }
 
     }

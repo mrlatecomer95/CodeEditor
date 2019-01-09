@@ -13,11 +13,11 @@ namespace AvalonEdit.AddIn
         public static IEnumerable<ICSharpCode.NRefactory.Completion.ICompletionData> GetPointCompletion()
         {
             var collection = GetPointList();
-            var result = new List<MyCompletionData>();
+            var result = new List<PointModelCompletionData>();
 
             foreach (var item in collection)
             {
-                var data = new MyCompletionData(item.Key);
+                var data = new PointModelCompletionData(item.Key);
                 result.Add(data);
             }
 
@@ -27,11 +27,11 @@ namespace AvalonEdit.AddIn
         public static IEnumerable<ICSharpCode.NRefactory.Completion.ICompletionData> GetModelCompletion()
         {
             var collection = GetModelList();
-            var result = new List<MyCompletionData>();
+            var result = new List<PointModelCompletionData>();
 
             foreach (var item in collection)
             {
-                var data = new MyCompletionData(item.Key);
+                var data = new PointModelCompletionData(item.Key);
                 result.Add(data);
             }
             return result;

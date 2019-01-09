@@ -10,5 +10,9 @@ namespace test3
         {
             // {Input rule code here}
         }
+        public static void testing(string x, int y)
+        {
+
+        }
     }
 }

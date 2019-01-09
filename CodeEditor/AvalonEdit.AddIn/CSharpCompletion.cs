@@ -149,6 +149,7 @@ namespace AvalonEdit.AddIn
                 completionContext.TypeResolveContextAtCaret
                 );
 
+
             cce.EolMarker = Environment.NewLine;
             cce.FormattingPolicy = FormattingOptionsFactory.CreateSharpDevelop();
 
@@ -158,6 +159,7 @@ namespace AvalonEdit.AddIn
             IEnumerable<ICSharpCode.NRefactory.Completion.ICompletionData> completionData;
             if (controlSpace)
             {
+
                 if (!cce.TryGetCompletionWord(completionContext.Offset, out startPos, out triggerWordLength))
                 {
                     startPos = completionContext.Offset;
@@ -181,7 +183,7 @@ namespace AvalonEdit.AddIn
                     triggerWordLength = 1;
 
                 }
-                else if ((!char.IsLetterOrDigit(completionChar)) || completionChar == '@')
+                else if ((!char.IsLetterOrDigit(completionChar)) && completionChar == '@')
                 {
 
                     var strPrefix = completionContext.Document.GetText(startPos - 5, 4); //Get the Text; FIFO
@@ -190,10 +192,11 @@ namespace AvalonEdit.AddIn
                     {
 
                         GetPointModuleCompletion(strPrefix, controlSpace, ref result);
-                        result.TriggerWord = strPrefix + "@";
-                        result.TriggerWordLength = strPrefix.Length + 1;
-                        return result;
+                        completionData = result.CompletionData as ICollection<ICSharpCode.NRefactory.Completion.ICompletionData>;
+                        startPos = completionContext.Offset;
+                        triggerWordLength = 0;
                     }
+
                     completionData = cce.GetCompletionData(startPos, false);
                     triggerWordLength = 0;
                 }
@@ -207,8 +210,6 @@ namespace AvalonEdit.AddIn
             result.TriggerWordLength = triggerWordLength;
             result.TriggerWord = completionContext.Document.GetText(completionContext.Offset - triggerWordLength, triggerWordLength);
             Debug.Print("Trigger word: '{0}'", result.TriggerWord);
-
-            //cast to AvalonEdit completion data and add to results
             foreach (var completion in completionData)
             {
                 var cshellCompletionData = completion as CompletionData;
@@ -225,82 +226,108 @@ namespace AvalonEdit.AddIn
             {
                 // Method Insight
                 var pce = new CSharpParameterCompletionEngine(
-                    completionContext.Document,
-                    completionContext.CompletionContextProvider,
-                    completionFactory,
-                    completionContext.ProjectContent,
-                    completionContext.TypeResolveContextAtCaret
-                );
+                                    completionContext.Document,
+                                    completionContext.CompletionContextProvider,
+                                    completionFactory,
+                                    completionContext.ProjectContent,
+                                    completionContext.TypeResolveContextAtCaret);
 
                 var parameterDataProvider = pce.GetParameterDataProvider(completionContext.Offset, completionChar);
                 result.OverloadProvider = parameterDataProvider as IOverloadProvider;
             }
 
             return result;
-
         }
 
 
         private void GetPointModuleCompletion(string prefix, bool controlSpace, ref CodeCompletionResult result)
         {
-            var compData = new List<MyCompletionData>();
-
+            var compData = new List<PointModelCompletionData>();
 
             if (prefix != null)
             {
                 if (prefix == Constants.PointCaller)
                 {
-                    compData = ClassList.GetPointCompletion() as List<MyCompletionData>;
-
-
+                    compData = ClassList.GetPointCompletion() as List<PointModelCompletionData>;
                 }
                 else if (prefix == Constants.ModelCaller)
                 {
-                    compData = ClassList.GetModelCompletion() as List<MyCompletionData>;
+                    compData = ClassList.GetModelCompletion() as List<PointModelCompletionData>;
                 }
 
-
-                if (controlSpace)
+                //if (controlSpace)
+                //{
+                //    foreach (var completion in compData)
+                //    {
+                //        var cshellCompletionData = completion as PointModelCompletionData;
+                //        cshellCompletionData.PreFix = prefix;
+                //        if (cshellCompletionData != null)
+                //        {
+                //            cshellCompletionData.TriggerWord = string.Concat(prefix,"@",result.TriggerWord);
+                //            //cshellCompletionData.TriggerWordLength = result.TriggerWordLength;
+                //            result.CompletionData.Add(cshellCompletionData);
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                foreach (var completion in compData)
                 {
-                    foreach (var completion in compData)
+                    var cshellCompletionData = completion as PointModelCompletionData;
+                    cshellCompletionData.PreFix = prefix;
+                    if (cshellCompletionData != null)
                     {
-                        var cshellCompletionData = completion as MyCompletionData;
-                        cshellCompletionData.PreFix = prefix;
-                        if (cshellCompletionData != null)
-                        {
-                            cshellCompletionData.TriggerWord = result.TriggerWord;
-                            cshellCompletionData.TriggerWordLength = result.TriggerWordLength;
-                            result.CompletionData.Add(cshellCompletionData);
-                        }
+                        cshellCompletionData.TriggerWord = prefix + "@" + completion.Text.Length;
+                        cshellCompletionData.TriggerWordLength = (prefix.Length + 1) + completion.Text.Length;
+                        //cshellCompletionData.TriggerWordLength =  1 ;
+                        result.CompletionData.Add(cshellCompletionData);
                     }
                 }
-                else
-                {
-                    foreach (var completion in compData)
-                    {
-                        var cshellCompletionData = completion as MyCompletionData;
-                        cshellCompletionData.PreFix = prefix;
-                        if (cshellCompletionData != null)
-                        {
-                            cshellCompletionData.TriggerWord = prefix + "@";
-                            cshellCompletionData.TriggerWordLength = prefix.Length + 1;
-                            result.CompletionData.Add(cshellCompletionData);
-                        }
-                    }
-
-
-                }
-
+                //}
 
             }
         }
+        //private IEnumerable<ICSharpCode.NRefactory.Completion.ICompletionData> GetPointModelList(string prefix)
+        //{
+        //    var compData = new List<PointModelCompletionData>();
+        //    List<ICSharpCode.NRefactory.Completion.ICompletionData> result = new List<ICSharpCode.NRefactory.Completion.ICompletionData>();
+        //    if (prefix != null)
+        //    {
+        //        if (prefix == Constants.PointCaller)
+        //        {
+        //            compData = ClassList.GetPointCompletion() as List<PointModelCompletionData>;
+        //        }
+        //        else if (prefix == Constants.ModelCaller)
+        //        {
+        //            compData = ClassList.GetModelCompletion() as List<PointModelCompletionData>;
+        //        }
 
+        //    }
+        //    foreach (var completion in compData)
+        //    {
+        //        var cshellCompletionData = completion as PointModelCompletionData;
+        //        cshellCompletionData.PreFix = prefix;
+        //        if (cshellCompletionData != null)
+        //        {
+        //            cshellCompletionData.TriggerWord = prefix + "@" + completion.Text.Length;
+        //            cshellCompletionData.TriggerWordLength = (prefix.Length + 1) + completion.Text.Length;
+        //            //cshellCompletionData.TriggerWordLength =  1 ;
+        //            result.Add(cshellCompletionData);
+        //        }
+        //    }
+
+        //    return result;
+        //    //}
+
+        //}
 
 
         //Testing
         #region Testing
         private void GetReferenceByFiles()
         {
+
+            //Get the location of the PWS DLLS
             var referenceFolderPath = new string[] {
                     "C:\\Users\\earlsan.villegas\\Documents\\PWS",
             };
@@ -347,8 +374,7 @@ namespace AvalonEdit.AddIn
             var fileEx = new FileInfo(reference);
 
 
-            var pathBin = "bin"; //This should be contstant; Contants.BinFolder;
-                                 //look in the bin folder
+            var pathBin = Constants.BinFolder; //look in the bin folder
             if (!File.Exists(fullPath))
                 fullPath = Path.Combine(Environment.CurrentDirectory, pathBin, reference);
             if (!File.Exists(fullPath))

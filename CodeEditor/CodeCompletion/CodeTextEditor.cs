@@ -1,4 +1,4 @@
-﻿
+﻿ 
 using AvalonEdit.AddIn.Util;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -37,33 +37,11 @@ namespace AvalonEdit.AddIn
 
             var ctrlSpace = new RoutedCommand();
             ctrlSpace.InputGestures.Add(new KeyGesture(Key.Space, ModifierKeys.Control));
-
-            var pressCtrlF1 = new RoutedCommand();
-            pressCtrlF1.InputGestures.Add(new KeyGesture(Key.F1, ModifierKeys.Control, "Testing"));
-
-
-            var cb = new CommandBinding(ctrlSpace, OnCtrlSpaceCommand);
-
-            this.CommandBindings.Add(cb);
-            this.CommandBindings.Add(new CommandBinding(pressCtrlF1, OnCtrlF1));
+            this.CommandBindings.Add(new CommandBinding(ctrlSpace, OnCtrlSpaceCommand)); //Ctrl Command
 
         }
 
-        private void OnCtrlF1(object sender, ExecutedRoutedEventArgs e)
-        {
-            //throw new NotImplementedException();
-            //CompletionWindow win = new CompletionWindow(TextArea);
-            //IList<ICompletionData> complist = win.CompletionList.CompletionData;
-            //complist.Add(new MyCompletionData("Point1"));
-            //complist.Add(new MyCompletionData("Point2"));
-            //complist.Add(new MyCompletionData("Point3"));
-            //complist.Add(new MyCompletionData("Point4"));
-            //complist.Add(new MyCompletionData("Point5"));
-            //complist.Add(new MyCompletionData("Point6"));
-            //complist.Add(new MyCompletionData("Point7"));
-            //win.Show();
 
-        }
 
         #region CaretPositionChanged - Bracket Highlighting
         /// <summary>
