@@ -17,7 +17,7 @@ namespace AvalonEdit.AddIn.Util
         public const string PointCaller = "FIFO";
 
         /// <summary>
-        /// Point Caller Prefix when using the Intellisense
+        /// Model Caller Prefix when using the Intellisense
         /// </summary>
         public const string ModelCaller = "MIFO";
 

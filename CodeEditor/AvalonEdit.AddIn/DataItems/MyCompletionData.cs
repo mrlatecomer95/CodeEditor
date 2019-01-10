@@ -34,6 +34,7 @@ namespace AvalonEdit.AddIn.DataItems
                 default:
                     break;
             }
+            
 
             var outstr = "\"" + _list.FirstOrDefault(w => w.Key == this.CompletionText).Value + "\"" ;
 

@@ -327,9 +327,16 @@ namespace AvalonEdit.AddIn
         private void GetReferenceByFiles()
         {
 
+            var PWSDLLFolder = Path.Combine(Environment.CurrentDirectory, "PWS");
+            if (!Directory.Exists(PWSDLLFolder))
+            {
+                Directory.CreateDirectory(PWSDLLFolder);
+            }
+
             //Get the location of the PWS DLLS
             var referenceFolderPath = new string[] {
-                    "C:\\Users\\earlsan.villegas\\Documents\\PWS",
+                    //"C:\\Users\\earlsan.villegas\\Documents\\PWS",
+                    PWSDLLFolder,
             };
             //AddReferences(Directory.GetFiles(referenceFolderPath).ToArray());
 
@@ -338,7 +345,7 @@ namespace AvalonEdit.AddIn
             {
                 AddReferences(Directory.GetFiles(item).ToArray());
             }
-            AddAssembly("C:\\Users\\earlsan.villegas\\Documents\\Github\\CodeEditor\\CodeEditor\\CodeEditor\\bin\\Debug\\Dynamic.Points.dll");
+            //AddAssembly("C:\\Users\\earlsan.villegas\\Documents\\Github\\CodeEditor\\CodeEditor\\CodeEditor\\bin\\Debug\\Dynamic.Points.dll");
         }
 
         public void AddReferences(params string[] references)

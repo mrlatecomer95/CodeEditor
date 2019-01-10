@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageBindings", "Languag
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Points", "Points", "{1F1BEDA2-246A-4A4D-B9E5-8082AC919A0A}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CodeEditorSetup", "CodeEditorSetup\CodeEditorSetup.vdproj", "{59257B22-8B05-43B0-9D46-C650197B9CE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,8 @@ Global
 		{ADA514A0-4C4B-4854-A1D3-E402A3F57018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADA514A0-4C4B-4854-A1D3-E402A3F57018}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADA514A0-4C4B-4854-A1D3-E402A3F57018}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59257B22-8B05-43B0-9D46-C650197B9CE7}.Debug|Any CPU.ActiveCfg = Debug
+		{59257B22-8B05-43B0-9D46-C650197B9CE7}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
